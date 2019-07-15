@@ -16,7 +16,7 @@ public class RandomStyle : MonoBehaviour
     private Collider m_Collider;
     private Renderer m_Renderer;
 
-    public static string[] resourcesPath = new[] {"type1/", "type2/", "type3/"};
+    public static string[] resourcesPath = new[] {"type1/", "type2/", "type3/", "type4/", "type5/", "type6/"};
 
     void Start()
     {
