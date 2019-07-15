@@ -167,7 +167,10 @@ public class ManagerEditor : Editor
 
         if (GUILayout.Button("Start Screen Shot"))
         {
-            m_Manager.StartTakeScreenShot(m_image_number);
+            if ( Application.isPlaying)
+                m_Manager.StartTakeScreenShot(m_image_number);
+            else 
+                Debug.Log("Please do it in play mode");
         }
 
         if (GUILayout.Button("Force Stop Screen Shot"))
