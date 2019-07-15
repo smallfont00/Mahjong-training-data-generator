@@ -21,13 +21,21 @@ public class Array : MonoBehaviour
 
     public bool flipEnable = false;
     public bool visibleEnable = false;
+    public bool numberRandomEnable = false;
     
-    public static void ChangeArrayRightNumberRandomly(uint minSize, uint maxSize)
+    public int randomRangeMin = 1;
+    public int randomRangeMax = 7;
+    
+    public void ChangeRightNumberRandomly()
     {
-        foreach (Array array in FindObjectsOfType<Array>())
+        if (numberRandomEnable)
         {
-            array.RightNumber = (uint) Random.Range(Math.Max(0, minSize), Math.Max(0, Math.Max(minSize, maxSize)));
-            array.CreateObjects();
+            foreach (Array array in FindObjectsOfType<Array>())
+            {
+                array.RightNumber = (uint) Random.Range(Math.Max(0, randomRangeMin),
+                    Math.Max(0, Math.Max(randomRangeMin, randomRangeMax)));
+                array.CreateObjects();
+            }
         }
     }
     

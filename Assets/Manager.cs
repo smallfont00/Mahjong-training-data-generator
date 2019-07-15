@@ -21,8 +21,6 @@ public class Manager : MonoBehaviour
 
     //public Camera[] cameras;
     public GameObject[] mjBuilder;
-    public float[] translateIntense;
-    public float[] rotateIntense;
     private CameraDetect[] m_CameraDetectsScript;
     private Camera[] m_CamerasScript;
 
@@ -64,12 +62,15 @@ public class Manager : MonoBehaviour
         folderName = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
         for (int i = 0; i < number; i++)
         {
-            Array.ChangeArrayRightNumberRandomly(1, 7);
-            
+            foreach (GameObject mjb in mjBuilder)
+            {
+                mjb.GetComponent<Array>().ChangeRightNumberRandomly();
+            }
             foreach (GameObject mjb in mjBuilder)
             {
                 mjb.GetComponent<Array>().ChangeAllMjStyleRandomly();
             }
+            
             ShakeCameras();
             
             foreach (Camera camera1 in FindObjectsOfType<Camera>())
@@ -142,7 +143,7 @@ public class Manager : MonoBehaviour
     {
         for (var i = 0; i < cameras.Length; i++)
         {
-            cameras[i].GetComponent<CameraDetect>().RandomSlightlyTransform(translateIntense[i], rotateIntense[i]);
+            cameras[i].GetComponent<CameraDetect>().RandomSlightlyTransform();
         }
     }
 

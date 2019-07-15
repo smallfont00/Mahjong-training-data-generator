@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 [System.Serializable]
@@ -10,6 +11,9 @@ public class CameraDetect : MonoBehaviour
     // Start is called before the first frame update
     private Vector3 m_OriginalLocalPosition;
     private Vector3 m_OriginalLocalRotation;
+
+    public float translateIntense;
+    public float rotateIntense;
 
     void Start()
     {
@@ -21,11 +25,9 @@ public class CameraDetect : MonoBehaviour
         m_OriginalLocalPosition = transform.localPosition;
         m_OriginalLocalRotation = transform.localEulerAngles;
     }
-    
-    
-    public void RandomSlightlyTransform(float translateIntense, float rotateIntense)
+
+    public void RandomSlightlyTransform()
     {
-        
         transform.localPosition =
             m_OriginalLocalPosition + Random.insideUnitSphere * Random.Range(0f, translateIntense);
         transform.localEulerAngles =
