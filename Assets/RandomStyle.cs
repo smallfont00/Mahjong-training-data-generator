@@ -16,7 +16,7 @@ public class RandomStyle : MonoBehaviour
     private Collider m_Collider;
     private Renderer m_Renderer;
 
-    public static string[] resourcesPath = new[] { "imgaug1/", "imgaug2/", "imgaug3/", "imgaug4/", "imgaug5/", "imgaug6/" };
+    public static string[] resourcesPath = new[] { "imgaug1/", "imgaug2/", "imgaug3/", "imgaug4/", "imgaug5/", "imgau6/" };
 
     void Start()
     {
@@ -61,7 +61,6 @@ public class RandomStyle : MonoBehaviour
         {
             path = resourcesPath[i] + ToPhotoFormat(randomCard);
             nextTexture = Resources.Load<Texture2D>(path);
-            if (j == 10) break;
         }
         mat.mainTexture = nextTexture;
         m_Type = randomCard.ToString();
