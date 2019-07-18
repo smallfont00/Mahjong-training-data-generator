@@ -72,8 +72,6 @@ public class Manager : MonoBehaviour
                 {
                     string path = source + resourcesPath[j];
                     string savePath = source + "imgaug" + Convert.ToString(j + 1);
-                    Debug.Log(path);
-                    Debug.Log(savePath);
                     python.callPython(path, savePath);
                 }
             }
