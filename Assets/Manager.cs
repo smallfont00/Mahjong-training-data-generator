@@ -23,9 +23,11 @@ public class Manager : MonoBehaviour
     public GameObject[] mjBuilder;
     private CameraDetect[] m_CameraDetectsScript;
     private Camera[] m_CamerasScript;
-
+    static string[] resourcesPath = new[] { "type1/", "type2/", "type3/", "type4/", "type5/", "type6/" };
+    Python python;
     void Start()
     {
+        python = GameObject.Find("Python").GetComponent<Python>();
         m_CameraDetectsScript = new CameraDetect[cameras.Length];
         m_CamerasScript = new Camera[cameras.Length];
         for (var i = 0; i < cameras.Length; i++)
@@ -62,6 +64,19 @@ public class Manager : MonoBehaviour
         folderName = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
         for (int i = 0; i < number; i++)
         {
+
+            if (i % 25 == 0)
+            {
+                var source = @"D:\UnrealProject\Mahjong-training-data-generator\Assets\Mj\Resources\";
+                for (int j = 0; j < 6; j++)
+                {
+                    string path = source + resourcesPath[j];
+                    string savePath = source + "imgaug" + Convert.ToString(j + 1);
+                    Debug.Log(path);
+                    Debug.Log(savePath);
+                    python.callPython(path, savePath);
+                }
+            }
             foreach (GameObject mjb in mjBuilder)
             {
                 mjb.GetComponent<Array>().ChangeRightNumberRandomly();
@@ -70,15 +85,15 @@ public class Manager : MonoBehaviour
             {
                 mjb.GetComponent<Array>().ChangeAllMjStyleRandomly();
             }
-            
+
             ShakeCameras();
-            
+
             foreach (Camera camera1 in FindObjectsOfType<Camera>())
             {
                 camera1.orthographic = (Random.Range(0, 2) == 1);
                 Debug.Log(camera1.orthographic);
             }
-            
+
             yield return new WaitForEndOfFrame();
             TakeScreenShot();
         }
@@ -118,10 +133,10 @@ public class Manager : MonoBehaviour
             foreach (YoloData data in yoloData)
             {
                 Rect rect = data.Rect;
-                var minX = (int) data.Rect.x;
-                var minY = (int) data.Rect.y;
-                var maxX = (int) (data.Rect.x + data.Rect.width);
-                var maxY = (int) (data.Rect.y + data.Rect.height);
+                var minX = (int)data.Rect.x;
+                var minY = (int)data.Rect.y;
+                var maxX = (int)(data.Rect.x + data.Rect.width);
+                var maxY = (int)(data.Rect.y + data.Rect.height);
                 string[] labelFeild =
                 {
                     minX.ToString(), minY.ToString(), maxX.ToString(), maxY.ToString(), data.Type
@@ -163,14 +178,14 @@ public class ManagerEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        m_Manager = (Manager) target;
+        m_Manager = (Manager)target;
         m_image_number = EditorGUILayout.IntField("Shot Number", m_image_number);
 
         if (GUILayout.Button("Start Screen Shot"))
         {
-            if ( Application.isPlaying)
+            if (Application.isPlaying)
                 m_Manager.StartTakeScreenShot(m_image_number);
-            else 
+            else
                 Debug.Log("Please do it in play mode");
         }
 
