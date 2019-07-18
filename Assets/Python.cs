@@ -20,8 +20,6 @@ public class Python : MonoBehaviour
     }
     public void callPython(string loadPath, string savePath)
     {
-        UnityEngine.Debug.Log("hello fuck");
-        Texture2D tx = new Texture2D(1024, 1024);
         Process p = new Process();
         string sArgName = "main.py";
         string path = @"C:\Users\chsu\Desktop\" + sArgName;
