@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
 using System.IO;
-using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class Manager : MonoBehaviour
@@ -64,14 +60,14 @@ public class Manager : MonoBehaviour
         folderName = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
         for (int i = 0; i < number; i++)
         {
-
             if (i % 25 == 0)
             {
-                var source = @"D:\UnrealProject\Mahjong-training-data-generator\Assets\Mj\Resources\";
+                //var source = @"D:\UnrealProject\Mahjong-training-data-generator\Assets\Mj\Resources\";
+                var source = $"{Application.dataPath}/Assets/Mj/Resources/";
                 for (int j = 0; j < 6; j++)
                 {
                     string path = source + resourcesPath[j];
-                    string savePath = source + "imgaug" + Convert.ToString(j + 1);
+                    string savePath = $"{source}imgaug{j + 1}";
                     python.callPython(path, savePath);
                 }
             }
@@ -122,30 +118,32 @@ public class Manager : MonoBehaviour
             DestroyImmediate(rt);
 
             byte[] bytes = screenShot.EncodeToJPG();
-            string filePath = Application.dataPath + "/ScreenShot~/" + folderName + "/Image/";
-            string imageFileName = "p" + screenShotNumber + ".jpg";
+            string filePath = $"{Application.dataPath }/ScreenShot~/{folderName}/Image/";
+            string imageFileName = $"p{screenShotNumber}.jpg";
             if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
-            System.IO.File.WriteAllBytes(filePath + imageFileName, bytes);
-            List<string> labels = new List<string>();
-            labels.Add("Image/" + imageFileName);
+            File.WriteAllBytes(filePath + imageFileName, bytes);
+            List<string> labels = new List<string>
+            {
+                "Image/" + imageFileName
+            };
             foreach (YoloData data in yoloData)
             {
-                Rect rect = data.Rect;
-                var minX = (int)data.Rect.x;
-                var minY = (int)data.Rect.y;
-                var maxX = (int)(data.Rect.x + data.Rect.width);
-                var maxY = (int)(data.Rect.y + data.Rect.height);
-                string[] labelFeild =
-                {
-                    minX.ToString(), minY.ToString(), maxX.ToString(), maxY.ToString(), data.Type
-                };
-                labels.Add(String.Join(",", labelFeild));
+                //Rect rect = data.Rect;
+                //var minX = (int)data.Rect.x;
+                //var minY = (int)data.Rect.y;
+                //var maxX = (int)(data.Rect.x + data.Rect.width);
+                //var maxY = (int)(data.Rect.y + data.Rect.height);
+                //string[] labelFeild =
+                //{
+                //    minX.ToString(), minY.ToString(), maxX.ToString(), maxY.ToString(), data.Type
+                //};
+                //labels.Add(string.Join(",", labelFeild));
+                labels.Add(data.ToString());
             }
 
-            using (var sw =
-                System.IO.File.AppendText(Application.dataPath + "/ScreenShot~/" + folderName + "/train.txt"))
+            using (var sw = File.AppendText($"{Application.dataPath}/ScreenShot~/{folderName}/train.txt"))
             {
-                sw.WriteLine(String.Join(" ", labels));
+                sw.WriteLine(string.Join(" ", labels));
             }
             screenShotNumber++;
         }

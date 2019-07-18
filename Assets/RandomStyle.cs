@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class RandomStyle : MonoBehaviour
@@ -81,7 +76,7 @@ public class RandomStyle : MonoBehaviour
         for (int i = 0; i < (1 << box.Length); i++)
         {
             var tmp = boxPoint;
-            for (int j = 0; j < box.Length; j++) tmp += (((i & (1 << j)) != 0) ? (box[j]) : (-box[j]));
+            for (int j = 0; j < box.Length; j++) tmp += ((i & (1 << j)) != 0) ? box[j] : (-box[j]);
             //Debug.DrawRay(boxPoint, (tmp - boxPoint).normalized);
             tmp = cam.WorldToScreenPoint(tmp);
             left = Mathf.Min(left, tmp.x);
@@ -106,5 +101,9 @@ public class YoloData
     {
         Rect = rect;
         Type = type;
+    }
+    public override string ToString()
+    {
+        return $"{(int)Rect.xMin},{(int)Rect.yMin},{(int)Rect.xMax},{(int)Rect.yMax},{Type}";
     }
 }
