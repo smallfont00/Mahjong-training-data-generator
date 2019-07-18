@@ -79,11 +79,11 @@ public class Manager : MonoBehaviour
             }
             foreach (GameObject mjb in mjBuilder)
             {
-                mjb.GetComponent<Array>().ChangeRightNumberRandomly();
+                mjb.GetComponent<MJArray>().ChangeRightNumberRandomly();
             }
             foreach (GameObject mjb in mjBuilder)
             {
-                mjb.GetComponent<Array>().ChangeAllMjStyleRandomly();
+                mjb.GetComponent<MJArray>().ChangeAllMjStyleRandomly();
             }
 
             ShakeCameras();

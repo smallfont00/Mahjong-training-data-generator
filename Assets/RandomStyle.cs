@@ -43,7 +43,7 @@ public class RandomStyle : MonoBehaviour
 
     private string ToPhotoFormat(int number)
     {
-        return "p(" + number + ")";
+        return $"p({number})";
     }
     public void ChangeStyleRandomly(bool flipEnable = true, bool visibleEnable = true)
     {
@@ -57,7 +57,7 @@ public class RandomStyle : MonoBehaviour
         var path = resourcesPath[randomType] + ToPhotoFormat(randomCard);
 
         var nextTexture = Resources.Load<Texture2D>(path);
-        for (int i = (randomType + 1) % typeNumber, j = 0; nextTexture == null; i = (i + 1) % typeNumber,j++)
+        for (int i = (randomType + 1) % typeNumber, j = 0; nextTexture == null; i = (i + 1) % typeNumber, j++)
         {
             path = resourcesPath[i] + ToPhotoFormat(randomCard);
             nextTexture = Resources.Load<Texture2D>(path);
@@ -66,7 +66,7 @@ public class RandomStyle : MonoBehaviour
         mat.mainTexture = nextTexture;
         m_Type = randomCard.ToString();
     }
-    
+
     public YoloData GetYoloData(Camera cam)
     {
         var boxPoint = GetComponent<Renderer>().bounds.center;
@@ -77,7 +77,7 @@ public class RandomStyle : MonoBehaviour
         var boxForward = Vector3.forward * boxSize.z;
 
 
-        Vector3[] box = new Vector3[3] {boxUp, boxRight, boxForward};
+        Vector3[] box = new Vector3[3] { boxUp, boxRight, boxForward };
         float left = Screen.width, right = 0, up = 0, down = Screen.height;
         for (int i = 0; i < (1 << box.Length); i++)
         {
@@ -91,9 +91,9 @@ public class RandomStyle : MonoBehaviour
             down = Mathf.Min(down, tmp.y);
         }
 
-        var a = cam.ScreenToWorldPoint(new Vector3(left, up, cam.nearClipPlane * 2));
-        var b = cam.ScreenToWorldPoint(new Vector3(right, up, cam.nearClipPlane * 2));
-        var c = cam.ScreenToWorldPoint(new Vector3(left, down, cam.nearClipPlane * 2));
+        //var a = cam.ScreenToWorldPoint(new Vector3(left, up, cam.nearClipPlane * 2));
+        //var b = cam.ScreenToWorldPoint(new Vector3(right, up, cam.nearClipPlane * 2));
+        //var c = cam.ScreenToWorldPoint(new Vector3(left, down, cam.nearClipPlane * 2));
 
         return new YoloData(new Rect(left, Screen.height - up, right - left, up - down), m_Type);
     }
@@ -102,13 +102,10 @@ public class RandomStyle : MonoBehaviour
 public class YoloData
 {
     public Rect Rect { get; }
-
     public string Type { get; }
-
-
     public YoloData(Rect rect, string type)
     {
-        this.Rect = rect;
-        this.Type = type;
+        Rect = rect;
+        Type = type;
     }
 }

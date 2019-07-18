@@ -41,22 +41,18 @@ public class CameraDetect : MonoBehaviour
         foreach (GameObject mj in mjList)
         {
             if (!mj.GetComponent<RandomStyle>().visiable) continue;
-            if (Vector3.Dot((-mj.transform.up).normalized, (transform.position - mj.transform.position).normalized) <
-                0.3) continue;
+            if (Vector3.Dot((-mj.transform.up).normalized, (transform.position - mj.transform.position).normalized) < 0.3) continue;
 
-            RaycastHit hit;
             var boxSize = mj.GetComponent<Renderer>().bounds.extents;
             foreach (Transform child in mj.transform)
             {
-                if (Physics.Raycast(transform.position, child.position - transform.position, out hit))
+                if (Physics.Raycast(transform.position, child.position - transform.position, out RaycastHit hit))
                 {
                     if (hit.collider.gameObject == mj)
                     {
                         var yoloData = hit.collider.gameObject.GetComponent<RandomStyle>()
-                            .GetYoloData(this.GetComponent<Camera>());
+                            .GetYoloData(GetComponent<Camera>());
                         yoloDaces.Add(yoloData);
-                        //GUI.Box(yoloData.Rect, yoloData.Rect.ToString());
-                        //Debug.DrawLine(transform.position, child.position, Color.red);
                         break;
                     }
                 }
@@ -68,24 +64,22 @@ public class CameraDetect : MonoBehaviour
 
     private void OnGUI()
     {
-        if (this.gameObject.GetComponent<Camera>() != Camera.main) return;
+        if (GetComponent<Camera>() != Camera.main) return;
         var mjList = GameObject.FindGameObjectsWithTag("MJ");
         foreach (GameObject mj in mjList)
         {
             if (!mj.GetComponent<RandomStyle>().visiable) continue;
-            if (Vector3.Dot((-mj.transform.up).normalized, (transform.position - mj.transform.position).normalized) <
-                0.3) continue;
+            if (Vector3.Dot((-mj.transform.up).normalized, (transform.position - mj.transform.position).normalized) < 0.3) continue;
 
-            RaycastHit hit;
             var boxSize = mj.GetComponent<Renderer>().bounds.extents;
             foreach (Transform child in mj.transform)
             {
-                if (Physics.Raycast(transform.position, child.position - transform.position, out hit))
+                if (Physics.Raycast(transform.position, child.position - transform.position, out RaycastHit hit))
                 {
                     if (hit.collider.gameObject == mj)
                     {
                         var yoloData = hit.collider.gameObject.GetComponent<RandomStyle>()
-                            .GetYoloData(this.GetComponent<Camera>());
+                            .GetYoloData(GetComponent<Camera>());
                         GUI.Box(yoloData.Rect, yoloData.Type);
                         break;
                     }
