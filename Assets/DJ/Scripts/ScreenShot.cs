@@ -1,87 +1,61 @@
 ﻿using System;
 using System.IO;
 using UnityEngine;
-
-public class ScreenShot : MonoBehaviour
+using CommandLineTest;
+public partial class Screenshot : MonoBehaviour
 {
-    private int seconds = 0;
-    private float time = 0;
-    private bool isshot = false;
-    private StreamWriter fs;
+    [CustomMin(0)]
+    public int ShotCount = 0;
+    public DrawYolo Controller;
     private void Awake()
     {
-        fs = new StreamWriter(Path.GetFullPath(Application.dataPath + "/../log.log"), false);
-        var args = Environment.GetCommandLineArgs();
-        Resolution res = Screen.currentResolution;
-        for (int i = 0; i < args.Length; i++)
-        {
-            if (args[i] == "-screen-width")
-            {
-                i++;
-                if (i < args.Length)
-                {
-                    if (int.TryParse(args[i], out int width))
-                    {
-                        res.width = width;
-                    }
-                }
-            }
-            else if (args[i] == "-screen-height")
-            {
-                i++;
-                if (i < args.Length)
-                {
-                    if (int.TryParse(args[i], out int height))
-                    {
-                        res.height = height;
-                    }
-                }
-            }
-        }
-        Screen.SetResolution(res.width, res.height, false);
-    }
-    void Start()
-    {
-        fs.WriteLine("Start");
+        Screen.SetResolution(1024, 768, false);
     }
 
-    void Update()
-    {
-        time += Time.deltaTime;
-        if (time > 1)
-        {
-            while (time > 1)
-            {
-                seconds++;
-                time -= 1;
-            }
-        }
-        if (!isshot && seconds > 10)
-        {
-            fs.WriteLine("Attr Width: {0}, Height: {1}", Screen.width, Screen.height);
-            fs.WriteLine("Rect Width: {0}, Height: {1}", Screen.currentResolution.width, Screen.currentResolution.height);
-            fs.WriteLine(Path.GetFullPath(Application.dataPath + "/../test.jpg"));
-            isshot = true;
-            CaptureCamera(Camera.main);
-            fs.Close();
-            Application.Quit(0);
-        }
-    }
-
-    private void CaptureCamera(Camera cam)
+    private string CaptureCamera(Camera cam, string path, int id)
     {
         RenderTexture render = new RenderTexture(Screen.width, Screen.height, 0);
         RenderTexture.active = render;
         cam.targetTexture = render;
         cam.Render();
-        Texture2D texture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
-        texture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+        Texture2D texture = new Texture2D(render.width, render.height, TextureFormat.RGB24, false);
+        texture.ReadPixels(new Rect(0, 0, texture.width, texture.height), 0, 0);
         texture.Apply();
         cam.targetTexture = null;
         RenderTexture.active = null;
         DestroyImmediate(render);
         byte[] bytes = texture.EncodeToJPG();
-        string filePath = Path.GetFullPath(Application.dataPath + "/../test.jpg");
+        string fileName = id + ".jpg";
+        string filePath = Ext.GetPath(Path.Combine(path, fileName));
         File.WriteAllBytes(filePath, bytes);
+        return "Image/" + fileName;
+    }
+    public void OnGUI()
+    {
+        if (GUI.Button(new Rect(0, 0, 100, 50), "CaptureScreen"))
+        {
+            var detector = GetComponent<CamDetect>();
+            string timeString = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
+            Path.Combine();
+            string datafolder = Ext.GetPath(Application.dataPath, "ScreenShot~", timeString, "Image");
+            Debug.Log(datafolder);
+            Directory.CreateDirectory(datafolder);
+            using (var sw = new StreamWriter(Ext.GetPath(datafolder, "..", "train.txt")))
+            {
+                for (int i = 0; i < ShotCount; i++)
+                {
+                    Controller.Next();
+                    string imagePath = CaptureCamera(Camera.main, datafolder, i);
+                    var yoloData = detector.GetDetectedMjYoloData();
+                    sw.Write(imagePath);
+                    foreach (var j in yoloData)
+                    {
+                        sw.Write(" " + j);
+                    }
+                    sw.WriteLine();
+                }
+            }
+            Resources.UnloadUnusedAssets();
+        }
     }
 }

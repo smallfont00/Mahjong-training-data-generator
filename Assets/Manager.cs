@@ -118,7 +118,7 @@ public class Manager : MonoBehaviour
             DestroyImmediate(rt);
 
             byte[] bytes = screenShot.EncodeToJPG();
-            string filePath = $"{Application.dataPath }/ScreenShot~/{folderName}/Image/";
+            string filePath = $"{Application.dataPath}/ScreenShot~/{folderName}/Image/";
             string imageFileName = $"p{screenShotNumber}.jpg";
             if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
             File.WriteAllBytes(filePath + imageFileName, bytes);

@@ -6,11 +6,10 @@ public class RandomStyle : MonoBehaviour
     // Start is called before the first frame update
     public bool filped = false;
     public bool visiable = true;
-    private string m_Type;
     private Vector3 m_OriginalLocalEulerAngles;
     private Collider m_Collider;
     private Renderer m_Renderer;
-
+    public string type { get; internal set; }
     public static string[] resourcesPath = new[] { "imgaug1/", "imgaug2/", "imgaug3/", "imgaug4/", "imgaug5/", "imgau6/" };
 
     void Start()
@@ -18,7 +17,6 @@ public class RandomStyle : MonoBehaviour
         m_Renderer = GetComponent<Renderer>();
         m_Collider = GetComponent<Collider>();
         m_OriginalLocalEulerAngles = transform.localEulerAngles;
-        //ChangeStyleRandomly();
     }
 
     private void FixedUpdate()
@@ -58,7 +56,7 @@ public class RandomStyle : MonoBehaviour
             nextTexture = Resources.Load<Texture2D>(path);
         }
         mat.mainTexture = nextTexture;
-        m_Type = randomCard.ToString();
+        type = randomCard.ToString();
     }
 
     public YoloData GetYoloData(Camera cam)
@@ -70,40 +68,21 @@ public class RandomStyle : MonoBehaviour
         var boxRight = Vector3.right * boxSize.x;
         var boxForward = Vector3.forward * boxSize.z;
 
-
         Vector3[] box = new Vector3[3] { boxUp, boxRight, boxForward };
         float left = Screen.width, right = 0, up = 0, down = Screen.height;
         for (int i = 0; i < (1 << box.Length); i++)
         {
             var tmp = boxPoint;
-            for (int j = 0; j < box.Length; j++) tmp += ((i & (1 << j)) != 0) ? box[j] : (-box[j]);
-            //Debug.DrawRay(boxPoint, (tmp - boxPoint).normalized);
+            for (int j = 0; j < box.Length; j++)
+            {
+                tmp += ((i & (1 << j)) != 0) ? box[j] : (-box[j]);
+            }
             tmp = cam.WorldToScreenPoint(tmp);
             left = Mathf.Min(left, tmp.x);
             right = Mathf.Max(right, tmp.x);
             up = Mathf.Max(up, tmp.y);
             down = Mathf.Min(down, tmp.y);
         }
-
-        //var a = cam.ScreenToWorldPoint(new Vector3(left, up, cam.nearClipPlane * 2));
-        //var b = cam.ScreenToWorldPoint(new Vector3(right, up, cam.nearClipPlane * 2));
-        //var c = cam.ScreenToWorldPoint(new Vector3(left, down, cam.nearClipPlane * 2));
-
-        return new YoloData(new Rect(left, Screen.height - up, right - left, up - down), m_Type);
-    }
-}
-
-public class YoloData
-{
-    public Rect Rect { get; }
-    public string Type { get; }
-    public YoloData(Rect rect, string type)
-    {
-        Rect = rect;
-        Type = type;
-    }
-    public override string ToString()
-    {
-        return $"{(int)Rect.xMin},{(int)Rect.yMin},{(int)Rect.xMax},{(int)Rect.yMax},{Type}";
+        return new YoloData(new Rect(left, Screen.height - up, right - left, up - down), type);
     }
 }

@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
+
 namespace CommandLineTest
 {
     [CustomEditor(typeof(CreateMJ))]
@@ -13,6 +14,36 @@ namespace CommandLineTest
                 if (GUILayout.Button("Create"))
                 {
                     myScript.CreateObjects();
+                }
+            }
+        }
+    }
+
+    [CustomEditor(typeof(Screenshot))]
+    public class CreateScreenshotEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            if (target is Screenshot myScript)
+            {
+                if (GUILayout.Button("Test"))
+                {
+                }
+            }
+        }
+    }
+    [CustomEditor(typeof(DrawYolo))]
+    public class CreateDrawYoloEditor : Editor
+    {
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            if (target is DrawYolo myScript)
+            {
+                if (GUILayout.Button("Test"))
+                {
+                    myScript.Reset_MJ_Set();
                 }
             }
         }
