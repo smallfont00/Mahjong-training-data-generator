@@ -22,6 +22,7 @@ public class Python : MonoBehaviour
     {
         Process p = new Process();
         string path = Path.Combine(Application.dataPath, "..", "main.py");
+        path = Path.GetFullPath(Path.Combine(path));
         string sArguments = $"{path} \"{Path.Combine(loadPath, "*.jpg")}\" \"{savePath}\"";
         p.StartInfo.FileName = "python.exe";
         p.StartInfo.Arguments = sArguments;
