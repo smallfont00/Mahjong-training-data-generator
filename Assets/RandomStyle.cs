@@ -61,6 +61,7 @@ public class RandomStyle : MonoBehaviour
         {
             path = resourcesPath[i] + ToPhotoFormat(randomCard);
             nextTexture = Resources.Load<Texture2D>(path);
+            //if (j == 10) break;
         }
         mat.mainTexture = nextTexture;
         m_Type = randomCard.ToString();

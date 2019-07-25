@@ -23,16 +23,19 @@ public class Python : MonoBehaviour
         Process p = new Process();
         string sArgName = "main.py";
         string path = @"C:\Users\chsu\Desktop\" + sArgName;
-        string sArguments = path;
+        string sArguments = "-u " + path;
         p.StartInfo.FileName = "python.exe";
-        sArguments += " " + loadPath + " " + savePath + " - u";
+        loadPath += "*.jpg";
+        sArguments += " " + loadPath + " " + savePath;
         UnityEngine.Debug.Log(sArguments);
         p.StartInfo.Arguments = sArguments;
         p.StartInfo.UseShellExecute = false; //必需
         p.StartInfo.RedirectStandardOutput = true;//輸出引數設定
         p.StartInfo.RedirectStandardInput = true;//傳入引數設定
-        //p.StartInfo.CreateNoWindow = true;
+        p.StartInfo.CreateNoWindow = true;
         p.Start();
+        string output = p.StandardOutput.ReadToEnd();
+        UnityEngine.Debug.Log(output);
         p.WaitForExit();
     }
 }
