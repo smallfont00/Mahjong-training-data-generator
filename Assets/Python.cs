@@ -23,7 +23,7 @@ public class Python : MonoBehaviour
         Process p = new Process();
         string sArgName = "main.py";
         string path = @"C:\Users\chsu\Desktop\" + sArgName;
-        string sArguments = "-u " + path;
+        string sArguments = path;
         p.StartInfo.FileName = "python.exe";
         loadPath += "*.jpg";
         sArguments += " " + loadPath + " " + savePath;
