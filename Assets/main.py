@@ -7,8 +7,10 @@ import imageio , os , glob , sys , random
 def generateImage(loadPath,savePath):
  
  fileName = glob.glob(loadPath)
+ 
  if os.path.exists(savePath) == False:
   os.mkdir(savePath)
+  
  images = []
  for name in fileName:
   image = imageio.imread(name)
@@ -18,6 +20,7 @@ def generateImage(loadPath,savePath):
  mode = random.randint(0,100)
  aug = iaa.Sequential()
  mode = mode % 3
+ 
  if mode == 0:
   size = random.uniform(0.01,0.02) 
   density = random.uniform(0.15,0.3) 
@@ -28,7 +31,9 @@ def generateImage(loadPath,savePath):
   replace = random.uniform(0.4,0.5) 
   aug.add(iaa.PiecewiseAffine(scale=(0.02), nb_cols=(2,col), nb_rows=(2,row)))
   aug.add(iaa.Superpixels(p_replace=(0.3,replace), n_segments=100) )	
+  
  batches_aug = list(aug.augment_batches(batches, background=False))
+ 
  i = 0
  for name in fileName:
   imageio.imwrite(os.path.join(savePath, os.path.basename(name)), np.uint8(batches_aug[0].images_aug[i]))

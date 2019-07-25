@@ -22,12 +22,10 @@ public class Python : MonoBehaviour
     {
         Process p = new Process();
         string sArgName = "main.py";
-        string path = @"C:\Users\chsu\Desktop\" + sArgName;
+        string path = "\"" + Application.dataPath + "/" + sArgName + "\"";
         string sArguments = path;
         p.StartInfo.FileName = "python.exe";
-        loadPath += "*.jpg";
         sArguments += " " + loadPath + " " + savePath;
-        UnityEngine.Debug.Log(sArguments);
         p.StartInfo.Arguments = sArguments;
         p.StartInfo.UseShellExecute = false; //必需
         p.StartInfo.RedirectStandardOutput = true;//輸出引數設定

@@ -66,11 +66,11 @@ public class Manager : MonoBehaviour
         {
             if (i % 25 == 0)
             {
-                var source = Application.dataPath + "/Mj/Resources/";
+                var source = "\"" + Application.dataPath + "/Mj/Resources/";
                 for (int j = 0; j < 6; j++)
                 {
-                    string path = source + resourcesPath[j];
-                    string savePath = source + "imgaug" + Convert.ToString(j + 1) ;
+                    string path = source + resourcesPath[j] + "*.jpg\"";
+                    string savePath = source + "imgaug" + Convert.ToString(j + 1) + "\"";
                     python.callPython(path, savePath);
                 }
             }
