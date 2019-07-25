@@ -34,8 +34,6 @@ public class Python : MonoBehaviour
         p.StartInfo.RedirectStandardInput = true;//傳入引數設定
         p.StartInfo.CreateNoWindow = true;
         p.Start();
-        string output = p.StandardOutput.ReadToEnd();
-        UnityEngine.Debug.Log(output);
         p.WaitForExit();
     }
 }
