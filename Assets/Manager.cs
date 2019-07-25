@@ -62,12 +62,11 @@ public class Manager : MonoBehaviour
         {
             if (i % 25 == 0)
             {
-                //var source = @"D:\UnrealProject\Mahjong-training-data-generator\Assets\Mj\Resources\";
-                var source = $"{Application.dataPath}/Assets/Mj/Resources/";
+                var source = Path.Combine(Application.dataPath, "Mj", "Resources");
                 for (int j = 0; j < 6; j++)
                 {
-                    string path = source + resourcesPath[j];
-                    string savePath = $"{source}imgaug{j + 1}";
+                    string path = Path.Combine(source, resourcesPath[j]);
+                    string savePath = Path.Combine(source, $"imgaug{j + 1}");
                     python.callPython(path, savePath);
                 }
             }

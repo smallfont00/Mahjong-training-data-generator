@@ -7,7 +7,7 @@ public class MJArray : MonoBehaviour
 {
     // Start is called before the first frame update
     public bool inseparable = false;
-
+    public float ScaleSize = 1;
     public float Forwarddistance = 1.0f;
     public float Rightdistance = 1.0f;
     public float Updistance = 1.0f;
@@ -66,13 +66,13 @@ public class MJArray : MonoBehaviour
                 {
                     DestroyImmediate(transform.GetChild(0).gameObject);
                 }
-                var bounds = renderer.bounds;
-                var forwardStep = inseparable ? bounds.size.z : Forwarddistance;
-                var rightStep = inseparable ? bounds.size.x : Rightdistance;
-                var upStep = inseparable ? bounds.size.y : Updistance;
+                var size = renderer.bounds.size * ScaleSize;
+                var forwardStep = inseparable ? size.z : Forwarddistance;
+                var rightStep = inseparable ? size.x : Rightdistance;
+                var upStep = inseparable ? size.y : Updistance;
 
                 var basePos = transform.localPosition - transform.forward * (ForwardNumber - 1) / 2f * forwardStep - transform.right * (RightNumber - 1) / 2f * rightStep - transform.up * (UpNumber - 1) / 2f * upStep;
-                //var basePos = transform.localPosition - renderer.bounds.size / 2;
+
                 for (var i = 0; i < ForwardNumber; i++)
                 {
                     for (var j = 0; j < RightNumber; j++)
@@ -80,7 +80,8 @@ public class MJArray : MonoBehaviour
                         for (var k = 0; k < UpNumber; k++)
                         {
                             var pos = basePos + i * forwardStep * transform.forward + j * rightStep * transform.right + k * upStep * transform.up;
-                            Instantiate(TargetObject, pos, transform.rotation * TargetObject.transform.rotation, transform);
+                            var obj = Instantiate(TargetObject, pos, transform.rotation * TargetObject.transform.rotation, transform);
+                            obj.transform.localScale *= ScaleSize;
                         }
                     }
                 }
