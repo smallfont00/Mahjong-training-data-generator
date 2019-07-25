@@ -33,7 +33,6 @@ def generateImage(loadPath,savePath):
  for name in fileName:
   imageio.imwrite(os.path.join(savePath, os.path.basename(name)), np.uint8(batches_aug[0].images_aug[i]))
   i = i + 1
- print("123")
   
   
 if __name__ == '__main__':
