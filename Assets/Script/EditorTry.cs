@@ -7,30 +7,20 @@ using UnityEditor;
 [ExecuteInEditMode]
 public class EditorTry : MonoBehaviour
 {
-    void Awake()
-    {
-        Debug.Log("Awake");
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        Debug.Log("Update");
-    }
-
+    public string path = "test~";
     public void Play()
     {
-        Debug.Log("Button");
+        var list = Resources.LoadAll<Texture2D>(path);
+        Debug.Log(list.Length);
+        foreach(var i in list)
+        {
+            Debug.Log(i);
+        }
     }
 }
 
 [CustomEditor(typeof(EditorTry))]
-public class  AddButtonEditor : Editor
+public class AddButtonEditor : Editor
 {
     public override void OnInspectorGUI()
     {

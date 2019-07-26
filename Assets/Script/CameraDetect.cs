@@ -5,10 +5,9 @@ using Random = UnityEngine.Random;
 [System.Serializable]
 public class CameraDetect : MonoBehaviour
 {
-    // Start is called before the first frame update
     private Vector3 m_OriginalLocalPosition;
     private Vector3 m_OriginalLocalRotation;
-
+    public bool DisableGUI = false;
     public float translateIntense;
     public float rotateIntense;
 
@@ -38,7 +37,8 @@ public class CameraDetect : MonoBehaviour
         foreach (GameObject mj in mjList)
         {
             if (!mj.GetComponent<RandomStyle>().visiable) continue;
-            if (Vector3.Dot((-mj.transform.up).normalized, (transform.position - mj.transform.position).normalized) < 0.3) continue;
+            var mjt = mj.transform;
+            if (Vector3.Dot((-mjt.up).normalized, (transform.position - mjt.position).normalized) < 0.3) continue;
 
             var boxSize = mj.GetComponent<Renderer>().bounds.extents;
             foreach (Transform child in mj.transform)
@@ -47,26 +47,26 @@ public class CameraDetect : MonoBehaviour
                 {
                     if (hit.collider.gameObject == mj)
                     {
-                        var yoloData = hit.collider.gameObject.GetComponent<RandomStyle>()
-                            .GetYoloData(GetComponent<Camera>());
+                        var yoloData = hit.collider.gameObject.GetComponent<RandomStyle>().GetYoloData(GetComponent<Camera>());
                         yoloDaces.Add(yoloData);
                         break;
                     }
                 }
             }
         }
-
         return yoloDaces.ToArray();
     }
 
     private void OnGUI()
     {
+        if (DisableGUI) return;
         if (GetComponent<Camera>() != Camera.main) return;
         var mjList = GameObject.FindGameObjectsWithTag("MJ");
         foreach (GameObject mj in mjList)
         {
             if (!mj.GetComponent<RandomStyle>().visiable) continue;
-            if (Vector3.Dot((-mj.transform.up).normalized, (transform.position - mj.transform.position).normalized) < 0.3) continue;
+            var mjt = mj.transform;
+            if (Vector3.Dot((-mjt.up).normalized, (transform.position - mjt.position).normalized) < 0.3) continue;
 
             var boxSize = mj.GetComponent<Renderer>().bounds.extents;
             foreach (Transform child in mj.transform)

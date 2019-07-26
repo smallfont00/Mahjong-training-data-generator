@@ -5,8 +5,9 @@
 [Bb]uilds/
 Assets/AssetStoreTools*
 
-#Screen shot folder
+#Screenshot folder
 Assets/ScreenShot~/
+Assets/Mj/Resources/imgaug*
 
 # Visual Studio cache directory
 .vs/
