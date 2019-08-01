@@ -7,7 +7,7 @@ Assets/AssetStoreTools*
 
 #Screenshot folder
 Assets/ScreenShot~/
-Assets/Mj/Resources/imgaug*
+Assets/Mj/Resources/imgaug*/
 
 # Visual Studio cache directory
 .vs/
