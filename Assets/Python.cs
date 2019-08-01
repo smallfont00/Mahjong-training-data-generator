@@ -21,10 +21,10 @@ public class Python : MonoBehaviour
     public void callPython(string loadPath, string savePath)
     {
         Process p = new Process();
-        string sArgName = "main.py";
-        string path = @"C:\Users\chsu\Desktop\" + sArgName;
+        string sArgName = "/main.py";
+        string path = Application.dataPath + sArgName;
         string sArguments = path;
-        p.StartInfo.FileName = "python.exe";
+        p.StartInfo.FileName = "C:/Users/acer/Anaconda3/envs/py36/python.exe";
         sArguments += " " + loadPath + " " + savePath + " - u";
         UnityEngine.Debug.Log(sArguments);
         p.StartInfo.Arguments = sArguments;

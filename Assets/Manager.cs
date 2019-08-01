@@ -64,17 +64,7 @@ public class Manager : MonoBehaviour
         folderName = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
         for (int i = 0; i < number; i++)
         {
-
-            if (i % 25 == 0)
-            {
-                var source = @"D:\UnrealProject\Mahjong-training-data-generator\Assets\Mj\Resources\";
-                for (int j = 0; j < 6; j++)
-                {
-                    string path = source + resourcesPath[j];
-                    string savePath = source + "imgaug" + Convert.ToString(j + 1);
-                    python.callPython(path, savePath);
-                }
-            }
+            mjBuilder[4].transform.localEulerAngles += new Vector3(0, 90, 0);
             foreach (GameObject mjb in mjBuilder)
             {
                 mjb.GetComponent<Array>().ChangeRightNumberRandomly();
@@ -89,7 +79,6 @@ public class Manager : MonoBehaviour
             foreach (Camera camera1 in FindObjectsOfType<Camera>())
             {
                 camera1.orthographic = (Random.Range(0, 2) == 1);
-                Debug.Log(camera1.orthographic);
             }
 
             yield return new WaitForEndOfFrame();
@@ -125,6 +114,7 @@ public class Manager : MonoBehaviour
             string filePath = Application.dataPath + "/ScreenShot~/" + folderName + "/Image/";
             string imageFileName = "p" + screenShotNumber + ".jpg";
             if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
+            Debug.Log(filePath);
             System.IO.File.WriteAllBytes(filePath + imageFileName, bytes);
             List<string> labels = new List<string>();
             labels.Add("Image/" + imageFileName);

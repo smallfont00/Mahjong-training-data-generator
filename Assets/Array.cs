@@ -63,7 +63,6 @@ public class Array : MonoBehaviour
         }
         //foreach (Transform child in transform) DestroyImmediate(child.gameObject);
 //#endif
-
         var bounds = renderer.bounds;
         var forwardStep = inseparable ? bounds.size.z : Forwarddistance;
         var rightStep = inseparable ? bounds.size.x : Rightdistance;
