@@ -28,6 +28,7 @@ public class Array : MonoBehaviour
     
     public void ChangeRightNumberRandomly()
     {
+       // Debug.Log(randomRangeMin + " " + randomRangeMax);
         if (numberRandomEnable)
         {
             foreach (Array array in FindObjectsOfType<Array>())
@@ -71,6 +72,7 @@ public class Array : MonoBehaviour
 
         var basePos = transform.localPosition - transform.forward * (ForwardNumber - 1) / 2f * forwardStep - transform.right * (RightNumber-1) / 2f * rightStep - transform.up * (UpNumber -1) / 2f * upStep;
         //var basePos = transform.localPosition - renderer.bounds.size / 2;
+        //Debug.Log(RightNumber);
         for (var i = 0; i < ForwardNumber; i++)
         {
             for (var j = 0; j < RightNumber; j++)

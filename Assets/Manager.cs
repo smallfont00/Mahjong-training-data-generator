@@ -23,7 +23,7 @@ public class Manager : MonoBehaviour
     public GameObject[] mjBuilder;
     private CameraDetect[] m_CameraDetectsScript;
     private Camera[] m_CamerasScript;
-    static string[] resourcesPath = new[] { "type1/", "type2/", "type3/", "type4/", "type5/", "type6/" };
+    static string[] resourcesPath = new[] { "type1", "type2", "type3", "type4", "type5", "type6" };
     Python python;
     void Start()
     {
@@ -64,16 +64,17 @@ public class Manager : MonoBehaviour
         folderName = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
         for (int i = 0; i < number; i++)
         {
-            if (i % 25 == 0)
+           /* if (i % 25 == 0)
             {
-                var source = "\"" + Application.dataPath + "/Mj/Resources/";
-                for (int j = 0; j < 6; j++)
+                var source = Application.dataPath + "/Mj/Resources/";
+                Debug.Log(resourcesPath.Length);
+                for (int j = 0; j < resourcesPath.Length; j++)
                 {
-                    string path = source + resourcesPath[j] + "*.jpg\"";
-                    string savePath = source + "imgaug" + Convert.ToString(j + 1) + "\"";
+                    string path = Path.Combine(source, resourcesPath[j]);
+                    string savePath = Path.Combine(source, $"imgaug{j + 1}");
                     python.callPython(path, savePath);
                 }
-            }
+            }*/
             foreach (GameObject mjb in mjBuilder)
             {
                 mjb.GetComponent<Array>().ChangeRightNumberRandomly();

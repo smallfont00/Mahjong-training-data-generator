@@ -49430,6 +49430,11 @@ PrefabInstance:
       propertyPath: numberRandomEnable
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2289400195802467622, guid: 4dd3c1759d59f3d468d0c91c46b604e5,
+        type: 3}
+      propertyPath: UpNumber
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4dd3c1759d59f3d468d0c91c46b604e5, type: 3}
 --- !u!1 &1328532825

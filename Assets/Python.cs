@@ -21,11 +21,10 @@ public class Python : MonoBehaviour
     public void callPython(string loadPath, string savePath)
     {
         Process p = new Process();
-        string sArgName = "main.py";
-        string path = "\"" + Application.dataPath + "/" + sArgName + "\"";
-        string sArguments = path;
+        string path = Path.Combine(Application.dataPath, "main.py");
+        string sArguments = $"{path} \"{Path.Combine(loadPath, "*.jpg")}\" \"{savePath}\"";
+        UnityEngine.Debug.Log(sArguments);
         p.StartInfo.FileName = "python.exe";
-        sArguments += " " + loadPath + " " + savePath;
         p.StartInfo.Arguments = sArguments;
         p.StartInfo.UseShellExecute = false; //必需
         p.StartInfo.RedirectStandardOutput = true;//輸出引數設定
