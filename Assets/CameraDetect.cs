@@ -43,54 +43,54 @@ public class CameraDetect : MonoBehaviour
             if (!mj.GetComponent<RandomStyle>().visiable) continue;
             if (Vector3.Dot((-mj.transform.up).normalized, (transform.position - mj.transform.position).normalized) <
                 0.3) continue;
+            var yoloData = mj.GetComponent<RandomStyle>().GetYoloData(this.GetComponent<Camera>());
+            yoloDaces.Add(yoloData);
 
-            RaycastHit hit;
-            var boxSize = mj.GetComponent<Renderer>().bounds.extents;
-            foreach (Transform child in mj.transform)
-            {
-                if (Physics.Raycast(transform.position, child.position - transform.position, out hit))
-                {
-                    if (hit.collider.gameObject == mj)
-                    {
-                        var yoloData = hit.collider.gameObject.GetComponent<RandomStyle>()
-                            .GetYoloData(this.GetComponent<Camera>());
-                        yoloDaces.Add(yoloData);
-                        //GUI.Box(yoloData.Rect, yoloData.Rect.ToString());
-                        //Debug.DrawLine(transform.position, child.position, Color.red);
-                        break;
-                    }
-                }
-            }
+            //RaycastHit hit;
+            //var boxSize = mj.GetComponent<Renderer>().bounds.extents;
+            //foreach (Transform child in mj.transform)
+            //{
+            //    if (Physics.Raycast(transform.position, child.position - transform.position, out hit))
+            //    {
+            //        if (hit.collider.gameObject == mj)
+            //        {
+            //            var yoloData = hit.collider.gameObject.GetComponent<RandomStyle>()
+            //                .GetYoloData(this.GetComponent<Camera>());
+            //            yoloDaces.Add(yoloData);
+            //            break;
+            //        }
+            //    }
+            //}
         }
 
         return yoloDaces.ToArray();
     }
 
-    private void OnGUI()
-    {
-        if (this.gameObject.GetComponent<Camera>() != Camera.main) return;
-        var mjList = GameObject.FindGameObjectsWithTag("MJ");
-        foreach (GameObject mj in mjList)
-        {
-            if (!mj.GetComponent<RandomStyle>().visiable) continue;
-            if (Vector3.Dot((-mj.transform.up).normalized, (transform.position - mj.transform.position).normalized) <
-                0.3) continue;
+    //private void OnGUI()
+    //{
+    //    if (this.gameObject.GetComponent<Camera>() != Camera.main) return;
+    //    var mjList = GameObject.FindGameObjectsWithTag("MJ");
+    //    foreach (GameObject mj in mjList)
+    //    {
+    //        if (!mj.GetComponent<RandomStyle>().visiable) continue;
+    //        if (Vector3.Dot((-mj.transform.up).normalized, (transform.position - mj.transform.position).normalized) <
+    //            0.3) continue;
 
-            RaycastHit hit;
-            var boxSize = mj.GetComponent<Renderer>().bounds.extents;
-            foreach (Transform child in mj.transform)
-            {
-                if (Physics.Raycast(transform.position, child.position - transform.position, out hit))
-                {
-                    if (hit.collider.gameObject == mj)
-                    {
-                        var yoloData = hit.collider.gameObject.GetComponent<RandomStyle>()
-                            .GetYoloData(this.GetComponent<Camera>());
-                        GUI.Box(yoloData.Rect, yoloData.Type);
-                        break;
-                    }
-                }
-            }
-        }
-    }
+    //        RaycastHit hit;
+    //        var boxSize = mj.GetComponent<Renderer>().bounds.extents;
+    //        foreach (Transform child in mj.transform)
+    //        {
+    //            if (Physics.Raycast(transform.position, child.position - transform.position, out hit))
+    //            {
+    //                if (hit.collider.gameObject == mj)
+    //                {
+    //                    var yoloData = hit.collider.gameObject.GetComponent<RandomStyle>()
+    //                        .GetYoloData(this.GetComponent<Camera>());
+    //                    GUI.Box(yoloData.Rect, yoloData.Type);
+    //                    break;
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 }
