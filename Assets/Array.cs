@@ -22,23 +22,20 @@ public class Array : MonoBehaviour
     public bool flipEnable = false;
     public bool visibleEnable = false;
     public bool numberRandomEnable = false;
-    
-    public int randomRangeMin = 1;
-    public int randomRangeMax = 7;
-    
+
+    public int randomRangeMin;
+    public int randomRangeMax;
+
     public void ChangeRightNumberRandomly()
     {
         if (numberRandomEnable)
         {
-            foreach (Array array in FindObjectsOfType<Array>())
-            {
-                array.RightNumber = (uint) Random.Range(Math.Max(0, randomRangeMin),
-                    Math.Max(0, Math.Max(randomRangeMin, randomRangeMax)));
-                array.CreateObjects();
-            }
+            RightNumber = (uint)Random.Range(Math.Max(0, randomRangeMin),
+                Math.Max(0, Math.Max(randomRangeMin, randomRangeMax)));
+            CreateObjects();
         }
     }
-    
+
     public void ChangeAllMjStyleRandomly()
     {
         foreach (Transform transform1 in transform)
@@ -47,28 +44,28 @@ public class Array : MonoBehaviour
             randomStyle.ChangeStyleRandomly(flipEnable, visibleEnable);
         }
     }
-    
+
     public void CreateObjects()
     {
         if (TargetObject == null) { Debug.Log("Target Object haven't set"); return; }
         Renderer renderer = TargetObject.GetComponent<Renderer>();
         if (renderer == null) { Debug.Log("Target Object doesn't have Renderer"); return; }
 
-//#if UNITY_EDITOR
-//        foreach (Transform child in transform) UnityEditor.EditorApplication.delayCall += () => { DestroyImmediate(child.gameObject); };
-//#else
+        //#if UNITY_EDITOR
+        //        foreach (Transform child in transform) UnityEditor.EditorApplication.delayCall += () => { DestroyImmediate(child.gameObject); };
+        //#else
         while (transform.childCount > 0)
         {
             DestroyImmediate(transform.GetChild(0).gameObject);
         }
         //foreach (Transform child in transform) DestroyImmediate(child.gameObject);
-//#endif
+        //#endif
         var bounds = renderer.bounds;
         var forwardStep = inseparable ? bounds.size.z : Forwarddistance;
         var rightStep = inseparable ? bounds.size.x : Rightdistance;
         var upStep = inseparable ? bounds.size.y : Updistance;
 
-        var basePos = transform.localPosition - transform.forward * (ForwardNumber - 1) / 2f * forwardStep - transform.right * (RightNumber-1) / 2f * rightStep - transform.up * (UpNumber -1) / 2f * upStep;
+        var basePos = transform.localPosition - transform.forward * (ForwardNumber - 1) / 2f * forwardStep - transform.right * (RightNumber - 1) / 2f * rightStep - transform.up * (UpNumber - 1) / 2f * upStep;
         //var basePos = transform.localPosition - renderer.bounds.size / 2;
         for (var i = 0; i < ForwardNumber; i++)
         {
@@ -77,7 +74,7 @@ public class Array : MonoBehaviour
                 for (var k = 0; k < UpNumber; k++)
                 {
                     var pos = basePos + i * forwardStep * transform.forward + j * rightStep * transform.right + k * upStep * transform.up;
-                    Instantiate(TargetObject, pos, transform.rotation * TargetObject.transform.rotation, transform);
+                    GameObject mj = Instantiate(TargetObject, transform.parent.position + pos, transform.rotation * TargetObject.transform.rotation, transform);
                 }
             }
         }
@@ -91,12 +88,12 @@ public class ArrayEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-         Array myScript = (Array)target;
- 
-         if (GUILayout.Button("Button"))
-         {
-             myScript.CreateObjects();
-         }
+        Array myScript = (Array)target;
+
+        if (GUILayout.Button("Button"))
+        {
+            myScript.CreateObjects();
+        }
     }
- }
+}
 #endif
