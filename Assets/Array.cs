@@ -33,8 +33,11 @@ public class Array : MonoBehaviour
         {
             foreach (Array array in FindObjectsOfType<Array>())
             {
-                array.RightNumber = (uint) Random.Range(Math.Max(0, randomRangeMin),
-                    Math.Max(0, Math.Max(randomRangeMin, randomRangeMax)));
+                if (array.numberRandomEnable)
+                {
+                    RightNumber = (uint)Random.Range(Math.Max(0, randomRangeMin),
+                        Math.Max(0, Math.Max(array.randomRangeMin, randomRangeMax)));
+                }
                 array.CreateObjects();
             }
         }

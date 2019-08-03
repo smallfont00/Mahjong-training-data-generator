@@ -16,7 +16,7 @@ public class RandomStyle : MonoBehaviour
     private Collider m_Collider;
     private Renderer m_Renderer;
 
-    public static string[] resourcesPath = new[] { "type1/", "type2/", "type3/", "type4/", "type5/", "imgau6/" };
+    static string[] resourcesPath = new[] { "type1/", "type2/", "type3/", "type4/", "type5/", "type6/" };
 
     void Start()
     {
@@ -69,31 +69,44 @@ public class RandomStyle : MonoBehaviour
     
     public YoloData GetYoloData(Camera cam)
     {
-        var boxPoint = GetComponent<Renderer>().bounds.center;
-        var boxSize = GetComponent<Renderer>().bounds.extents;
-
-        var boxUp = Vector3.up * boxSize.y;
-        var boxRight = Vector3.right * boxSize.x;
-        var boxForward = Vector3.forward * boxSize.z;
-
-
-        Vector3[] box = new Vector3[3] {boxUp, boxRight, boxForward};
         float left = Screen.width, right = 0, up = 0, down = Screen.height;
-        for (int i = 0; i < (1 << box.Length); i++)
+        foreach (Transform point_transform in transform)
         {
-            var tmp = boxPoint;
-            for (int j = 0; j < box.Length; j++) tmp += (((i & (1 << j)) != 0) ? (box[j]) : (-box[j]));
-            //Debug.DrawRay(boxPoint, (tmp - boxPoint).normalized);
-            tmp = cam.WorldToScreenPoint(tmp);
+            var tmp = cam.WorldToScreenPoint(point_transform.position);
             left = Mathf.Min(left, tmp.x);
             right = Mathf.Max(right, tmp.x);
             up = Mathf.Max(up, tmp.y);
             down = Mathf.Min(down, tmp.y);
         }
 
+        //var boxPoint = GetComponent<Renderer>().bounds.center;
+        //var boxSize = GetComponent<Renderer>().bounds.extents;
+
+        //var boxUp = Vector3.up * boxSize.y;
+        //var boxRight = Vector3.right * boxSize.x;
+        //var boxForward = Vector3.forward * boxSize.z;
+
+
+
+        //Vector3[] box = new Vector3[3] {boxUp, boxRight, boxForward};
+        //float left = Screen.width, right = 0, up = 0, down = Screen.height;
+        //for (int i = 0; i < (1 << box.Length); i++)
+        //{
+        //    var tmp = boxPoint;
+        //    for (int j = 0; j < box.Length; j++) tmp += (((i & (1 << j)) != 0) ? (box[j]) : (-box[j]));
+        //    //Debug.DrawRay(boxPoint, (tmp - boxPoint).normalized);
+        //    tmp = cam.WorldToScreenPoint(tmp);
+        //    left = Mathf.Min(left, tmp.x);
+        //    right = Mathf.Max(right, tmp.x);
+        //    up = Mathf.Max(up, tmp.y);
+        //    down = Mathf.Min(down, tmp.y);
+        //}
+
         var a = cam.ScreenToWorldPoint(new Vector3(left, up, cam.nearClipPlane * 2));
         var b = cam.ScreenToWorldPoint(new Vector3(right, up, cam.nearClipPlane * 2));
         var c = cam.ScreenToWorldPoint(new Vector3(left, down, cam.nearClipPlane * 2));
+
+
 
         return new YoloData(new Rect(left, Screen.height - up, right - left, up - down), m_Type);
     }
