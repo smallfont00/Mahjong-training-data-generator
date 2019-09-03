@@ -40,7 +40,7 @@ public class CamDetect : MonoBehaviour
         var mjList = GameObject.FindGameObjectsWithTag("MJ");
         foreach (GameObject mj in mjList)
         {
-            if (!mj.GetComponent<RandomStyle>().visiable) continue;
+            if (!mj.GetComponent<RandomStyle>().m_visiable) continue;
             if (Vector3.Dot((-mj.transform.up).normalized, (transform.position - mj.transform.position).normalized) < 0.3) continue;
 
             var boxSize = mj.GetComponent<Renderer>().bounds.extents;
@@ -67,7 +67,7 @@ public class CamDetect : MonoBehaviour
         var mjList = GameObject.FindGameObjectsWithTag("MJ");
         foreach (GameObject mj in mjList)
         {
-            if (!mj.GetComponent<RandomStyle>().visiable) continue;
+            if (!mj.GetComponent<RandomStyle>().m_visiable) continue;
             if (Vector3.Dot((-mj.transform.up).normalized, (transform.position - mj.transform.position).normalized) < 0.3) continue;
 
             var boxSize = mj.GetComponent<Renderer>().bounds.extents;

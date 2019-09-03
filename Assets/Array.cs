@@ -21,17 +21,23 @@ public class Array : MonoBehaviour
 
     public bool flipEnable = false;
     public bool visibleEnable = false;
+    public bool rotateEnable = false;
+
     public bool numberRandomEnable = false;
 
     public int randomRangeMin;
     public int randomRangeMax;
 
+    private void Start()
+    {
+        CreateObjects();
+    }
     public void ChangeRightNumberRandomly()
     {
         if (numberRandomEnable)
         {
             RightNumber = (uint)Random.Range(Math.Max(0, randomRangeMin),
-                Math.Max(0, Math.Max(randomRangeMin, randomRangeMax)));
+                Math.Max(0, Math.Max(randomRangeMin, randomRangeMax + 1)));
             CreateObjects();
         }
     }
@@ -41,7 +47,7 @@ public class Array : MonoBehaviour
         foreach (Transform transform1 in transform)
         {
             var randomStyle = transform1.gameObject.GetComponent<RandomStyle>();
-            randomStyle.ChangeStyleRandomly(flipEnable, visibleEnable);
+            randomStyle.ChangeStyleRandomly(flipEnable, visibleEnable, rotateEnable);
         }
     }
 

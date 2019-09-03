@@ -8,52 +8,55 @@ using Random = UnityEngine.Random;
 
 public class RandomStyle : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public bool filped = false;
-    public bool visiable = true;
+    public bool m_filped = false;
+    public int m_rotated = 0;
+    public bool m_visiable = true;
+
     private string m_Type;
     private Vector3 m_OriginalLocalEulerAngles;
     private Collider m_Collider;
     private Renderer m_Renderer;
 
-    static string[] resourcesPath = new[] { "type1/", "type2/", "type3/", "type4/", "type5/", "type6/" };
+    static string[] resourcesPath = new[] { "type1/", "type2/", "type3/", "type4/", "type5/", "type6/", "type7/" };
 
     void Start()
     {
         m_Renderer = GetComponent<Renderer>();
         m_Collider = GetComponent<Collider>();
         m_OriginalLocalEulerAngles = transform.localEulerAngles;
+
         //ChangeStyleRandomly();
     }
 
-    private void FixedUpdate()
-    {
-        m_Renderer.enabled = visiable;
-        m_Collider.enabled = visiable;
-        transform.localEulerAngles = m_OriginalLocalEulerAngles + (filped ? new Vector3(0, 180, 0) : Vector3.zero);
-    }
 
-    private static void ChangeAllStyleRandomly(bool flipEnable = false, bool visiableEnable = false)
-    {
-        foreach (RandomStyle mjStyle in FindObjectsOfType<RandomStyle>())
-        {
-            mjStyle.ChangeStyleRandomly(flipEnable, visiableEnable);
-        }
-    }
 
     private string ToPhotoFormat(int number)
     {
         return "p(" + number + ")";
     }
-    public void ChangeStyleRandomly(bool flipEnable = true, bool visibleEnable = true)
+    public void ChangeStyleRandomly(bool flipEnable = false, bool visibleEnable = false, bool rotateEnable = false)
     {
-        if (flipEnable) filped = Random.Range(0, 2) == 1;
-        if (visibleEnable) visiable = Random.Range(0, 2) == 1;
+        if (flipEnable) m_filped = Random.Range(0, 3) == 0;
+        if (visibleEnable) m_visiable = Random.Range(0, 3) <= 1;
+        if (rotateEnable) m_rotated = Random.Range(0, 4);
+
+        m_Renderer.enabled = m_visiable;
+        m_Collider.enabled = m_visiable;
+
+        transform.localEulerAngles = m_OriginalLocalEulerAngles + (m_filped ? new Vector3(0, 180, 0) : Vector3.zero);
+
+        if (rotateEnable) transform.Rotate(Vector3.up, m_rotated * 90, Space.World);
+
         var mat = GetComponent<Renderer>().materials[0];
 
         int typeNumber = resourcesPath.Length;
         var randomType = Random.Range(0, typeNumber);
         var randomCard = Random.Range(0, 42);
+
+        if (typeNumber == resourcesPath.Length - 1) {
+            int[] idx = { 9, 34, 35, 36, 37, 38, 39, 40, 41};
+            randomCard = idx[Random.Range(0, idx.Length)];
+        }
         var path = resourcesPath[randomType] + ToPhotoFormat(randomCard);
 
         var nextTexture = Resources.Load<Texture2D>(path);
@@ -61,7 +64,6 @@ public class RandomStyle : MonoBehaviour
         {
             path = resourcesPath[i] + ToPhotoFormat(randomCard);
             nextTexture = Resources.Load<Texture2D>(path);
-            //if (j == 10) break;
         }
         mat.mainTexture = nextTexture;
         m_Type = randomCard.ToString();
@@ -72,6 +74,7 @@ public class RandomStyle : MonoBehaviour
         float left = Screen.width, right = 0, up = 0, down = Screen.height;
         foreach (Transform point_transform in transform)
         {
+            if (!point_transform.gameObject.activeSelf) continue;
             var tmp = cam.WorldToScreenPoint(point_transform.position);
             left = Mathf.Min(left, tmp.x);
             right = Mathf.Max(right, tmp.x);
@@ -102,11 +105,13 @@ public class RandomStyle : MonoBehaviour
         //    down = Mathf.Min(down, tmp.y);
         //}
 
-        var a = cam.ScreenToWorldPoint(new Vector3(left, up, cam.nearClipPlane * 2));
-        var b = cam.ScreenToWorldPoint(new Vector3(right, up, cam.nearClipPlane * 2));
-        var c = cam.ScreenToWorldPoint(new Vector3(left, down, cam.nearClipPlane * 2));
-
-
+        // var a = cam.ScreenToWorldPoint(new Vector3(left, up, cam.nearClipPlane * 2));
+        // var b = cam.ScreenToWorldPoint(new Vector3(right, up, cam.nearClipPlane * 2));
+        // var c = cam.ScreenToWorldPoint(new Vector3(left, down, cam.nearClipPlane * 2));
+        left = Mathf.Max(0, left);
+        right = Mathf.Min(Screen.width, right);
+        up = Mathf.Min(Screen.height, up);
+        down = Mathf.Max(0, down);
 
         return new YoloData(new Rect(left, Screen.height - up, right - left, up - down), m_Type);
     }

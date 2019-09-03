@@ -21,20 +21,52 @@ public class Manager : MonoBehaviour
     //public Camera[] cameras;
     private List<GameObject> mjBuilder = new List<GameObject>();
 
+    private ChangeColor[] m_change_colors;
     //public GameObject[] mjBuilder;
-    static string[] resourcesPath = new[] { "type1/", "type2/", "type3/", "type4/", "type5/", "type6/" };
+    //static string[] resourcesPath = new[] { "type1/", "type2/", "type3/", "type4/", "type5/", "type6/", "type7/" };
     Python python;
+
+    public int cameraOnGUI = -1;
+
+    private IEnumerator m_test_coroutine;
     void Start()
     {
-        python = GameObject.Find("Python").GetComponent<Python>();
+        //python = GameObject.Find("Python").GetComponent<Python>();
         foreach (Transform child in transform)
         {
             var mj = child.gameObject.GetComponent<Array>()?.gameObject;
             if (mj) { mjBuilder.Add(mj); }
         }
-        
+
+        m_change_colors = GetComponents<ChangeColor>();
+
         foreach (GameObject cam in cameras) cam.GetComponent<CameraDetect>().SetManager(this);
+
+        m_test_coroutine = ForTest(2f);
+        StartCoroutine(m_test_coroutine);
     }
+    private void FixedUpdate()
+    {
+        for (int i = 0; i < cameras.Length; i++)
+        {
+            cameras[i].GetComponent<Camera>().targetDisplay = i == cameraOnGUI ? 0 : 1;
+            cameras[i].GetComponent<CameraDetect>().onGuiEnable = i == cameraOnGUI;
+        }
+    }
+
+    private IEnumerator ForTest(float second)
+    {
+        int count = 0;
+        while(true)
+        {
+            yield return StyleChange();
+            ShakeCameras();
+            Resources.UnloadUnusedAssets();
+            Debug.Log("Test :" + count++);
+            yield return new WaitForSeconds(second);
+        }
+    }
+
     public GameObject[] GetManagerMj()
     {
         List<GameObject> mjs = new List<GameObject>();
@@ -46,6 +78,7 @@ public class Manager : MonoBehaviour
 
     public void StartTakeScreenShot(int start = 0, int end = 0)
     {
+        if (m_test_coroutine != null) StopCoroutine(m_test_coroutine);
         if (m_Coroutine != null)
         {
             Debug.Log("Screen Shot Program Is Still Running");
@@ -63,26 +96,31 @@ public class Manager : MonoBehaviour
         Debug.Log("Screen Shot Program Is Stop");
     }
 
+    public IEnumerator StyleChange()
+    {
+        foreach (ChangeColor changeColor in m_change_colors)
+        {
+            changeColor.change();
+        }
+
+        foreach (GameObject mjb in mjBuilder)
+        {
+            mjb.GetComponent<Array>().ChangeRightNumberRandomly();
+        }
+        yield return null;
+        foreach (GameObject mjb in mjBuilder)
+        {
+            mjb.GetComponent<Array>().ChangeAllMjStyleRandomly();
+        }
+
+    }
     public IEnumerator RunScreenShotProgram(int start = 0, int end = 0)
     {
         folderName = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
         for (int i = start; i < end; i++)
         {
-            foreach (GameObject mjb in mjBuilder)
-            {
-                mjb.GetComponent<Array>().ChangeRightNumberRandomly();
-            }
-            foreach (GameObject mjb in mjBuilder)
-            {
-                mjb.GetComponent<Array>().ChangeAllMjStyleRandomly();
-            }
-
+            yield return StyleChange();
             ShakeCameras();
-
-            //foreach (Camera camera1 in FindObjectsOfType<Camera>())
-            //{
-            //    camera1.orthographic = (Random.Range(0, 2) == 1);
-            //}
             var cam = cameras[Random.Range(0, cameras.Length)];
             yield return new WaitForEndOfFrame();
             TakeScreenShot(cam, i);
