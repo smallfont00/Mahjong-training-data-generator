@@ -14,7 +14,7 @@ public class CameraDetect : MonoBehaviour
     private Vector3 m_OriginalLocalRotation;
 
     public float translateIntense;
-    public float rotateIntense;
+    //public float rotateIntense;
 
     public bool onGuiEnable = false;
 
@@ -37,8 +37,9 @@ public class CameraDetect : MonoBehaviour
     }
     public void RandomPositionSphere()
     {
-        var sphere = new Vector3(Random.Range(-0.25f, 0.25f), Random.Range(.3f, .75f), Random.Range(-1f, -0.5f));
-        var nextPosition = sphere.normalized * Random.Range(10f, 15f);
+        var circle = (new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f))).normalized;
+        var sphere = new Vector3(circle.x, Random.Range(.5f, .8f), circle.y);
+        var nextPosition = sphere.normalized * Random.Range(12f, 13f);
         nextPosition.y = Mathf.Abs(nextPosition.y);
         transform.localPosition = nextPosition;
         transform.LookAt(m_Manager.gameObject.transform);
@@ -54,8 +55,9 @@ public class CameraDetect : MonoBehaviour
     {
         transform.localPosition =
             m_OriginalLocalPosition + Random.insideUnitSphere * Random.Range(0f, translateIntense);
-        transform.localEulerAngles =
-            m_OriginalLocalRotation + Random.insideUnitSphere * Random.Range(0f, rotateIntense);
+        transform.LookAt(m_Manager.gameObject.transform);
+        //transform.localEulerAngles =
+        //    m_OriginalLocalRotation + Random.insideUnitSphere * Random.Range(0f, rotateIntense);
         if (randomSphereEnable) RandomPositionSphere();
     }
 
@@ -66,25 +68,21 @@ public class CameraDetect : MonoBehaviour
         if (Vector3.Dot((-mj.transform.up).normalized, (transform.position - mj.transform.position).normalized) < 0.175) return false;
         var screenPoint = thisCamera.WorldToScreenPoint(mj.transform.position);
 
-        float delta = 3;
+        float delta = 20;
 
         if (screenPoint.x <= delta || screenPoint.x >= Screen.width - delta) return false;
         if (screenPoint.y <= delta || screenPoint.y >= Screen.height - delta) return false;
 
         RaycastHit hit;
-
-        if (Physics.Raycast(transform.position, mj.transform.GetChild(0).position - transform.position, out hit))
+        int num_hit = 0;
+        foreach (Transform point in mj.transform.GetChild(0).transform)
         {
-            if (hit.collider.gameObject != mj)
-            {
-                if (Physics.Raycast(transform.position, mj.transform.GetChild(1).position - transform.position, out hit))
-                {
-                    if (hit.collider.gameObject != mj) return false;
-                }
-            }
+            if (Physics.Raycast(transform.position, point.position - transform.position, out hit))
+                if (hit.collider.gameObject == mj)
+                    num_hit++;
         }
-
-        return true;
+        if (num_hit >= 7) return true;
+        return false;
     }
 
     public YoloData[] GetDetectedMjYoloData()
@@ -121,7 +119,7 @@ public class CameraDetect : MonoBehaviour
 
     private void OnGUI()
     {
-        //return;
+        return;
         if (!this.onGuiEnable) return;
 
         var mjList = m_Manager?.GetManagerMj();

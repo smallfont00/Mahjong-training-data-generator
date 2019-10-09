@@ -13,7 +13,7 @@ using Random = UnityEngine.Random;
 public class Manager : MonoBehaviour
 {
 
-    private static string folderName = "";
+    public string folderName = "";
 
     // Start is called before the first frame update
     public GameObject[] cameras;
@@ -39,7 +39,7 @@ public class Manager : MonoBehaviour
         }
 
         m_change_colors = GetComponents<ChangeColor>();
-
+        
         foreach (GameObject cam in cameras) cam.GetComponent<CameraDetect>().SetManager(this);
 
         m_test_coroutine = ForTest(2f);
@@ -92,7 +92,7 @@ public class Manager : MonoBehaviour
     {
         StopCoroutine(m_Coroutine);
         m_Coroutine = null;
-        folderName = "";
+        //folderName = "";
         Debug.Log("Screen Shot Program Is Stop");
     }
 
@@ -116,7 +116,7 @@ public class Manager : MonoBehaviour
     }
     public IEnumerator RunScreenShotProgram(int start = 0, int end = 0)
     {
-        folderName = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
+        if (folderName == "") folderName = DateTime.Now.ToString("dd-MM-yyyy_hh-mm-ss");
         for (int i = start; i < end; i++)
         {
             yield return StyleChange();
@@ -150,13 +150,13 @@ public class Manager : MonoBehaviour
         DestroyImmediate(rt);
 
         byte[] bytes = screenShot.EncodeToJPG();
-        string filePath = Application.dataPath + "/ScreenShot~/" + folderName + "/Image/";
+        string filePath = Application.dataPath + "/ScreenShot~/" + folderName + "/image/";
         string imageFileName = "p" + screenShotNumber + ".jpg";
         if (!Directory.Exists(filePath)) Directory.CreateDirectory(filePath);
         //Debug.Log(filePath);
         System.IO.File.WriteAllBytes(filePath + imageFileName, bytes);
         List<string> labels = new List<string>();
-        labels.Add("Image/" + imageFileName);
+        labels.Add("image/" + imageFileName);
         foreach (YoloData data in yoloData)
         {
             Rect rect = data.Rect;
@@ -199,14 +199,14 @@ public class Manager : MonoBehaviour
 public class ManagerEditor : Editor
 {
     private Manager m_Manager;
-    private int m_start_index = 0;
-    private int m_end_index = 2500;
+    private int m_start_index;
+    private int m_end_index;
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
         m_Manager = (Manager)target;
-        m_start_index = EditorGUILayout.IntField("Shot Number", m_start_index);
-        m_end_index = EditorGUILayout.IntField("Shot Number", m_end_index);
+        m_start_index = EditorGUILayout.IntField("Start Number", m_start_index);
+        m_end_index = EditorGUILayout.IntField("Stop Number", m_end_index);
         if (GUILayout.Button("Start Screen Shot"))
         {
             if (Application.isPlaying)
